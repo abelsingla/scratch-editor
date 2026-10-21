@@ -14,9 +14,6 @@ settings can't be committed. `config/sbx/bin/sbx-up` checks each step and
 prints the matching section of this guide when one is missing, so keep the
 section headings stable.
 
-Maintainers: the sandbox is built from the sbx bundle (asteasolutions/ai-enablement, branch `feature/sbx-sandbox` at commit 64f0c14);
-its `sandbox/README.md` explains how.
-
 ## Known limits
 
 - **The Claude desktop app over SSH is for trusted work only.** It gives the
@@ -25,12 +22,14 @@ its `sandbox/README.md` explains how.
 - **Claude API calls failing with `ECONNRESET`.** If every request through
   the sbx proxy starts failing, run `sbx daemon restart` and start a new
   session.
-
-- **Some tests fail in the sandbox.** scratch-svg-renderer's two pixel
-  snapshot tests (they fail on macOS too), and scratch-gui's three Firefox
-  drag-over Playwright tests. Everything else passes. `acceptance.sh`'s
-  clone check also fails: this repository's commitlint hook rejects its test
-  commit.
+- **Some tests fail in the sandbox.** Everything else passes.
+  - scratch-gui's Firefox Playwright tests in
+    `test/playwright/backpack-drag-over.spec.js` ("backpack highlights when a
+    block is dragged over it") and `test/playwright/drag-over-targets.spec.js`
+    ("stage selector scales when a block is dragged over it", "sprite tile
+    scales when a block is dragged over it"). They pass in CI.
+  - scratch-svg-renderer's `test/visual-fidelity.js` pixel comparisons. They
+    also fail on macOS hosts, and pass in CI.
 
 ## Quick start
 
@@ -327,3 +326,7 @@ credentials, the network policy, ports and the browser, plus the clone
 `--name <name>` for a task sandbox, `--claude` for the checks that run
 Claude, and see `--help` for the other options and what each check covers.
 It restores everything it changes.
+
+In this repository the clone check fails: the commitlint hook rejects the
+test commit it makes in the VM. A commit with a Conventional Commits message
+comes back with `git fetch sandbox-scratch-editor` as expected.
