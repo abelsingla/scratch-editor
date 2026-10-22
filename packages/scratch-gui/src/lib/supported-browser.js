@@ -1,9 +1,9 @@
 import bowser from 'bowser';
 
 const minVersions = {
-    chrome: '121',
-    msedge: '121',
-    firefox: '123',
+    chrome: '124',
+    msedge: '124',
+    firefox: '125',
     safari: '17.4'
 };
 
