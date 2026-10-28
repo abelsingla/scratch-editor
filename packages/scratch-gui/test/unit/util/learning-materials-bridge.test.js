@@ -1,6 +1,8 @@
 import defaultLearningMaterials from '../../../src/lib/learning-materials/default-manifest.js';
 import LearningMaterialsBridge, {
+    DRAFT_SAVED_MESSAGE_TYPE,
     MATERIALS_MESSAGE_TYPE,
+    publishLearningPlatformEvent,
     STATUS_MESSAGE_TYPE
 } from '../../../src/lib/learning-materials/learning-materials-bridge.js';
 
@@ -62,5 +64,22 @@ describe('LearningMaterialsBridge', () => {
             })
         }));
         window.removeEventListener(STATUS_MESSAGE_TYPE, listener);
+    });
+
+    test('publishes draft metadata without project content', () => {
+        const listener = jest.fn();
+        window.addEventListener(DRAFT_SAVED_MESSAGE_TYPE, listener);
+        const metadata = {
+            schemaVersion: 1,
+            draftId: 'draft-1',
+            version: 1,
+            savedAt: '2026-10-28T12:00:00.000Z'
+        };
+
+        publishLearningPlatformEvent(DRAFT_SAVED_MESSAGE_TYPE, metadata, window.location.origin);
+
+        expect(listener).toHaveBeenCalledWith(expect.objectContaining({detail: metadata}));
+        expect(listener.mock.calls[0][0].detail).not.toHaveProperty('projectBlob');
+        window.removeEventListener(DRAFT_SAVED_MESSAGE_TYPE, listener);
     });
 });

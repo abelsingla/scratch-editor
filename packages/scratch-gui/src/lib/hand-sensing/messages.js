@@ -82,12 +82,55 @@ const catalanMessages = {
     'handSensing.pinkyTip': 'punta del dit petit'
 };
 
+const germanMessages = {
+    'gui.extension.handSensing.name': 'Handerkennung',
+    'gui.extension.handSensing.description': 'Verwende Handpositionen und Gesten mit der Kamera.',
+    'handSensing.categoryName': 'Handerkennung',
+    'handSensing.whenGestureDetected': 'wenn [HAND] Hand die Geste [GESTURE] zeigt',
+    'handSensing.handDetected': '[HAND] Hand erkannt?',
+    'handSensing.gesture': 'Geste der [HAND] Hand',
+    'handSensing.handConfidence': 'Sicherheit der [HAND] Hand',
+    'handSensing.landmarkPosition': '[AXIS]-Position von [LANDMARK] an [HAND] Hand',
+    'handSensing.anyHand': 'eine beliebige',
+    'handSensing.leftHand': 'die linke',
+    'handSensing.rightHand': 'die rechte',
+    'handSensing.closedFist': 'geschlossene Faust',
+    'handSensing.openPalm': 'offene Handfläche',
+    'handSensing.pointingUp': 'nach oben zeigen',
+    'handSensing.thumbDown': 'Daumen nach unten',
+    'handSensing.thumbUp': 'Daumen nach oben',
+    'handSensing.victory': 'Siegeszeichen',
+    'handSensing.iLoveYou': 'Ich liebe dich',
+    'handSensing.wrist': 'Handgelenk',
+    'handSensing.thumbCmc': 'Daumenansatz',
+    'handSensing.thumbMcp': 'unteres Daumengelenk',
+    'handSensing.thumbIp': 'oberes Daumengelenk',
+    'handSensing.thumbTip': 'Daumenspitze',
+    'handSensing.indexMcp': 'Zeigefingeransatz',
+    'handSensing.indexPip': 'unteres Zeigefingergelenk',
+    'handSensing.indexDip': 'oberes Zeigefingergelenk',
+    'handSensing.indexTip': 'Zeigefingerspitze',
+    'handSensing.middleMcp': 'Mittelfingeransatz',
+    'handSensing.middlePip': 'unteres Mittelfingergelenk',
+    'handSensing.middleDip': 'oberes Mittelfingergelenk',
+    'handSensing.middleTip': 'Mittelfingerspitze',
+    'handSensing.ringMcp': 'Ringfingeransatz',
+    'handSensing.ringPip': 'unteres Ringfingergelenk',
+    'handSensing.ringDip': 'oberes Ringfingergelenk',
+    'handSensing.ringTip': 'Ringfingerspitze',
+    'handSensing.pinkyMcp': 'Kleinfingeransatz',
+    'handSensing.pinkyPip': 'unteres Kleinfingergelenk',
+    'handSensing.pinkyDip': 'oberes Kleinfingergelenk',
+    'handSensing.pinkyTip': 'Kleinfingerspitze'
+};
+
 const withHandSensingMessages = messagesByLocale => Object.keys(messagesByLocale).reduce((result, locale) => {
     result[locale] = Object.assign(
         {},
         messagesByLocale[locale],
         englishMessages,
-        locale === 'ca' ? catalanMessages : {}
+        locale === 'ca' ? catalanMessages : {},
+        locale === 'de' ? germanMessages : {}
     );
     return result;
 }, {});
@@ -95,5 +138,6 @@ const withHandSensingMessages = messagesByLocale => Object.keys(messagesByLocale
 export {
     catalanMessages,
     englishMessages,
+    germanMessages,
     withHandSensingMessages
 };

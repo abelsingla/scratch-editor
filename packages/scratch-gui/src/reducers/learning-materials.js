@@ -3,6 +3,7 @@ import {normalizeLearningMaterials, STATUS_VALUES} from '../lib/learning-materia
 
 const SET_LEARNING_MATERIALS = 'scratch-gui/learning-materials/SET_LEARNING_MATERIALS';
 const SET_EXERCISE_STATUS = 'scratch-gui/learning-materials/SET_EXERCISE_STATUS';
+const RESTORE_EXERCISE_STATUSES = 'scratch-gui/learning-materials/RESTORE_EXERCISE_STATUSES';
 
 const buildStatusMap = manifest => manifest.exercises.reduce((result, exercise) => {
     result[exercise.id] = exercise.status;
@@ -31,6 +32,15 @@ const reducer = function (state, action) {
                 [action.exerciseId]: action.status
             })
         });
+    case RESTORE_EXERCISE_STATUSES:
+        return Object.assign({}, state, {
+            statusByExercise: Object.keys(state.statusByExercise).reduce((result, exerciseId) => {
+                const restoredStatus = action.statusByExercise[exerciseId];
+                result[exerciseId] = STATUS_VALUES.has(restoredStatus) ?
+                    restoredStatus : state.statusByExercise[exerciseId];
+                return result;
+            }, {})
+        });
     default:
         return state;
     }
@@ -46,8 +56,14 @@ const setExerciseStatus = (exerciseId, status) => {
     return {type: SET_EXERCISE_STATUS, exerciseId, status};
 };
 
+const restoreExerciseStatuses = statusByExercise => ({
+    type: RESTORE_EXERCISE_STATUSES,
+    statusByExercise: statusByExercise && typeof statusByExercise === 'object' ? statusByExercise : {}
+});
+
 export {
     initialState as learningMaterialsInitialState,
+    restoreExerciseStatuses,
     setExerciseStatus,
     setLearningMaterials
 };

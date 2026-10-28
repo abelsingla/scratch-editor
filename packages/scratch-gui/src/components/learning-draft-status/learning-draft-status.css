@@ -1,0 +1,60 @@
+@import "../../css/colors.css";
+
+.status {
+    align-items: center;
+    color: $ui-white;
+    display: flex;
+    font-size: 0.72rem;
+    font-weight: 600;
+    gap: 0.35rem;
+    opacity: 0.9;
+    padding: 0 0.5rem;
+    white-space: nowrap;
+}
+
+.indicator {
+    background: $ui-white-transparent;
+    border: 1px solid $ui-white;
+    border-radius: 50%;
+    height: 0.55rem;
+    width: 0.55rem;
+}
+
+.saved .indicator,
+.idle .indicator {
+    background: #4ade80;
+}
+
+.pending .indicator {
+    background: #facc15;
+}
+
+.saving .indicator,
+.restoring .indicator {
+    animation: pulse 900ms ease-in-out infinite alternate;
+    background: #67e8f9;
+}
+
+.error .indicator {
+    background: #f87171;
+}
+
+.disabled {
+    opacity: 0.65;
+}
+
+@keyframes pulse {
+    from {
+        opacity: 0.35;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 62rem) {
+    .label {
+        display: none;
+    }
+}

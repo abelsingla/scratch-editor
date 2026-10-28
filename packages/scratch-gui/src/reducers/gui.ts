@@ -9,6 +9,7 @@ import blockDragReducer, {blockDragInitialState} from './block-drag';
 import dynamicAssetsReducer, {dynamicAssetsInitialState} from './dynamic-assets';
 import editorTabReducer, {editorTabInitialState} from './editor-tab';
 import hoveredTargetReducer, {hoveredTargetInitialState} from './hovered-target';
+import learningDraftReducer, {learningDraftInitialState} from './learning-draft';
 import learningMaterialsReducer, {learningMaterialsInitialState} from './learning-materials';
 import menuReducer, {menuInitialState} from './menus';
 import micIndicatorReducer, {micIndicatorInitialState} from './mic-indicator';
@@ -60,6 +61,7 @@ const buildInitialState = (config: GUIConfig) => ({
     editorTab: editorTabInitialState,
     mode: modeInitialState,
     hoveredTarget: hoveredTargetInitialState,
+    learningDraft: learningDraftInitialState,
     learningMaterials: learningMaterialsInitialState,
     stageSize: stageSizeInitialState,
     menus: menuInitialState,
@@ -171,6 +173,7 @@ const guiReducer = combineReducers({
     editorTab: editorTabReducer,
     mode: modeReducer,
     hoveredTarget: hoveredTargetReducer,
+    learningDraft: learningDraftReducer,
     learningMaterials: learningMaterialsReducer,
     stageSize: stageSizeReducer,
     menus: menuReducer,

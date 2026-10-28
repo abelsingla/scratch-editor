@@ -14,7 +14,14 @@ const englishMessages = {
     'gui.learningMaterials.start': 'Start exercise',
     'gui.learningMaterials.complete': 'Mark as completed',
     'gui.learningMaterials.reopen': 'Reopen exercise',
-    'gui.learningMaterials.instructions': 'Steps'
+    'gui.learningMaterials.instructions': 'Steps',
+    'gui.learningDraft.disabled': 'Autosave off',
+    'gui.learningDraft.idle': 'Autosave on',
+    'gui.learningDraft.pending': 'Changes pending',
+    'gui.learningDraft.saving': 'Saving draft…',
+    'gui.learningDraft.saved': 'Draft saved',
+    'gui.learningDraft.restoring': 'Restoring draft…',
+    'gui.learningDraft.error': 'Autosave error'
 };
 
 const catalanMessages = {
@@ -33,7 +40,40 @@ const catalanMessages = {
     'gui.learningMaterials.start': 'Comença l’exercici',
     'gui.learningMaterials.complete': 'Marca com a completat',
     'gui.learningMaterials.reopen': 'Torna a obrir l’exercici',
-    'gui.learningMaterials.instructions': 'Passos'
+    'gui.learningMaterials.instructions': 'Passos',
+    'gui.learningDraft.disabled': 'Desament automàtic desactivat',
+    'gui.learningDraft.idle': 'Desament automàtic actiu',
+    'gui.learningDraft.pending': 'Canvis pendents',
+    'gui.learningDraft.saving': 'Desant l’esborrany…',
+    'gui.learningDraft.saved': 'Esborrany desat',
+    'gui.learningDraft.restoring': 'Restaurant l’esborrany…',
+    'gui.learningDraft.error': 'Error de desament automàtic'
+};
+
+const germanMessages = {
+    'gui.learningMaterials.menuButton': 'Lernmaterial',
+    'gui.learningMaterials.title': 'Lernmaterial',
+    'gui.learningMaterials.close': 'Lernmaterial schließen',
+    'gui.learningMaterials.progress': '{completed} von {total} Übungen abgeschlossen',
+    'gui.learningMaterials.minutes': '{minutes} Min.',
+    'gui.learningMaterials.beginner': 'Anfänger',
+    'gui.learningMaterials.intermediate': 'Mittel',
+    'gui.learningMaterials.advanced': 'Fortgeschritten',
+    'gui.learningMaterials.available': 'Verfügbar',
+    'gui.learningMaterials.inProgress': 'In Bearbeitung',
+    'gui.learningMaterials.completed': 'Abgeschlossen',
+    'gui.learningMaterials.locked': 'Gesperrt',
+    'gui.learningMaterials.start': 'Übung starten',
+    'gui.learningMaterials.complete': 'Als abgeschlossen markieren',
+    'gui.learningMaterials.reopen': 'Übung erneut öffnen',
+    'gui.learningMaterials.instructions': 'Schritte',
+    'gui.learningDraft.disabled': 'Automatisches Speichern aus',
+    'gui.learningDraft.idle': 'Automatisches Speichern aktiv',
+    'gui.learningDraft.pending': 'Änderungen ausstehend',
+    'gui.learningDraft.saving': 'Entwurf wird gespeichert…',
+    'gui.learningDraft.saved': 'Entwurf gespeichert',
+    'gui.learningDraft.restoring': 'Entwurf wird wiederhergestellt…',
+    'gui.learningDraft.error': 'Fehler beim automatischen Speichern'
 };
 
 const withLearningMaterialsMessages = messagesByLocale => Object.keys(messagesByLocale).reduce((result, locale) => {
@@ -41,7 +81,8 @@ const withLearningMaterialsMessages = messagesByLocale => Object.keys(messagesBy
         {},
         messagesByLocale[locale],
         englishMessages,
-        locale === 'ca' ? catalanMessages : {}
+        locale === 'ca' ? catalanMessages : {},
+        locale === 'de' ? germanMessages : {}
     );
     return result;
 }, {});
@@ -49,5 +90,6 @@ const withLearningMaterialsMessages = messagesByLocale => Object.keys(messagesBy
 export {
     catalanMessages,
     englishMessages,
+    germanMessages,
     withLearningMaterialsMessages
 };

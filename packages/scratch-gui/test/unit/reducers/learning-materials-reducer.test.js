@@ -1,5 +1,6 @@
 import reducer, {
     learningMaterialsInitialState,
+    restoreExerciseStatuses,
     setExerciseStatus,
     setLearningMaterials
 } from '../../../src/reducers/learning-materials.js';
@@ -34,5 +35,16 @@ describe('learning materials reducer', () => {
     test('ignores unknown exercise IDs', () => {
         const state = reducer(learningMaterialsInitialState, setExerciseStatus('missing', 'completed'));
         expect(state).toBe(learningMaterialsInitialState);
+    });
+
+    test('restores known exercise statuses without accepting unknown values', () => {
+        const state = reducer(learningMaterialsInitialState, restoreExerciseStatuses({
+            'detect-a-hand': 'completed',
+            'move-with-index-finger': 'invalid',
+            'missing': 'completed'
+        }));
+        expect(state.statusByExercise['detect-a-hand']).toBe('completed');
+        expect(state.statusByExercise['move-with-index-finger']).toBe('available');
+        expect(state.statusByExercise).not.toHaveProperty('missing');
     });
 });

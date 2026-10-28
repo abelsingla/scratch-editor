@@ -17,6 +17,7 @@ import ShareButton from './share-button.jsx';
 import {ComingSoonTooltip} from '../coming-soon/coming-soon.jsx';
 import Divider from '../divider/divider.jsx';
 import SaveStatus from './save-status.jsx';
+import LearningDraftStatus from '../learning-draft-status/learning-draft-status.jsx';
 import ProjectWatcher from '../../containers/project-watcher.jsx';
 import ProjectTitleInput from './project-title-input.jsx';
 import AuthorInfo from './author-info.jsx';
@@ -510,6 +511,7 @@ class MenuBar extends React.Component {
                 {/* show the proper UI in the account menu, given whether the user is
                 logged in, and whether a session is available to log in with */}
                 <div className={styles.accountInfoGroup}>
+                    <LearningDraftStatus />
                     <div className={styles.menuBarItem}>
                         {this.props.canSave && (
                             <SaveStatus className={classNames(styles.hoverable, styles.menuBarItem)} />

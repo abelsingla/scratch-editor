@@ -65,9 +65,49 @@ same payload to the configured parent origin. The payload contains only activity
 ID, exercise ID, status, schema version, and timestamp. It does not contain the
 project, learner identity, camera data, or LMS credentials.
 
-## Current persistence boundary
+## Local draft autosave
 
-Exercise state currently lives in the editor session. Server autosave, attempt
-identity, submission artifacts, and teacher review remain separate learning
-service milestones. The host must not treat the prototype status event as an
-auditable submission.
+The editor stores a complete SB3 draft and the exercise status map in IndexedDB.
+Changes are saved after five seconds of inactivity and when the page becomes
+hidden. On the next editor session, the matching draft is restored automatically.
+The title bar shows whether autosave is ready, pending, saving, saved, restoring,
+disabled, or in an error state.
+
+An embedding application should provide an opaque `learningDraftId` for each
+learning attempt. Without it, the editor derives a standalone key from the
+activity ID, activity revision, and Scratch project ID. The fallback makes local
+evaluation convenient but is not suitable for shared school devices because it
+does not identify a learner or LMS attempt.
+
+The optional integration properties are:
+
+- `learningAutosaveEnabled`: enables local draft autosave; defaults to `true`.
+- `learningAutosaveIntervalMs`: inactivity delay; defaults to `5000`.
+- `learningDraftId`: stable opaque attempt identifier supplied by the host.
+- `learningDraftStore`: storage adapter implementing `get`, `put`, and `delete`.
+- `onLearningDraftEvent`: callback receiving draft event type and metadata.
+
+The default store is browser-local. A later learning-service adapter can
+implement the same interface with authenticated remote storage.
+
+## Draft events
+
+The editor publishes these local events and forwards them to an explicitly
+configured parent origin:
+
+- `ft-learning/draft-saved.v1`
+- `ft-learning/draft-restored.v1`
+- `ft-learning/draft-error.v1`
+
+Successful event payloads contain the schema version, opaque draft ID, activity
+and project references, draft version, byte length, and timestamp. Project
+content, learner identity, camera data, and credentials are never included in a
+browser message.
+
+## Persistence boundary
+
+The IndexedDB copy is a recovery cache, not an authoritative submission. It can
+be removed by browser storage policies or by clearing site data. Remote draft
+history, optimistic concurrency, attempt authorization, immutable submissions,
+and teacher review remain learning-service milestones. A host must not treat a
+draft event as an auditable submission or grade.

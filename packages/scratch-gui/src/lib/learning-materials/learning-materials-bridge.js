@@ -4,10 +4,23 @@ import {normalizeLearningMaterials} from './manifest.js';
 const MATERIALS_MESSAGE_TYPE = 'ft-learning/materials.v1';
 const READY_MESSAGE_TYPE = 'ft-learning/editor-ready.v1';
 const STATUS_MESSAGE_TYPE = 'ft-learning/exercise-status.v1';
+const DRAFT_SAVED_MESSAGE_TYPE = 'ft-learning/draft-saved.v1';
+const DRAFT_RESTORED_MESSAGE_TYPE = 'ft-learning/draft-restored.v1';
+const DRAFT_ERROR_MESSAGE_TYPE = 'ft-learning/draft-error.v1';
+
+const resolveLearningPlatformOrigin = allowedOrigin =>
+    new URL(allowedOrigin || window.location.origin, window.location.href).origin;
+
+const publishLearningPlatformEvent = (type, payload, allowedOrigin) => {
+    window.dispatchEvent(new CustomEvent(type, {detail: payload}));
+    if (window.parent !== window) {
+        window.parent.postMessage({type, payload}, resolveLearningPlatformOrigin(allowedOrigin));
+    }
+};
 
 class LearningMaterialsBridge {
     constructor ({allowedOrigin, onMaterials}) {
-        this.allowedOrigin = new URL(allowedOrigin || window.location.origin, window.location.href).origin;
+        this.allowedOrigin = resolveLearningPlatformOrigin(allowedOrigin);
         this.onMaterials = onMaterials;
         this._handleMessage = this._handleMessage.bind(this);
     }
@@ -39,10 +52,7 @@ class LearningMaterialsBridge {
             status,
             timestamp: new Date().toISOString()
         };
-        window.dispatchEvent(new CustomEvent(STATUS_MESSAGE_TYPE, {detail}));
-        if (window.parent !== window) {
-            window.parent.postMessage({type: STATUS_MESSAGE_TYPE, payload: detail}, this.allowedOrigin);
-        }
+        publishLearningPlatformEvent(STATUS_MESSAGE_TYPE, detail, this.allowedOrigin);
     }
 
     dispose () {
@@ -51,8 +61,13 @@ class LearningMaterialsBridge {
 }
 
 export {
+    DRAFT_ERROR_MESSAGE_TYPE,
+    DRAFT_RESTORED_MESSAGE_TYPE,
+    DRAFT_SAVED_MESSAGE_TYPE,
     MATERIALS_MESSAGE_TYPE,
+    publishLearningPlatformEvent,
     READY_MESSAGE_TYPE,
+    resolveLearningPlatformOrigin,
     STATUS_MESSAGE_TYPE
 };
 
