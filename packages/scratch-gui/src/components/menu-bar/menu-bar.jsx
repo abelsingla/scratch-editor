@@ -28,7 +28,7 @@ import EditMenu from './edit-menu.jsx';
 import ModeMenu from './mode-menu.jsx';
 import AboutMenu from './about-menu.jsx';
 
-import {openTipsLibrary, openDebugModal} from '../../reducers/modals';
+import {openTipsLibrary, openDebugModal, openLearningMaterials} from '../../reducers/modals';
 import {setPlayer} from '../../reducers/mode';
 import {
     isTimeTravel220022BC,
@@ -63,6 +63,7 @@ import profileIcon from './icon--profile.png';
 import remixIcon from './icon--remix.svg';
 import dropdownCaret from './dropdown-caret.svg';
 import debugIcon from '../debug-modal/icons/icon--debug.svg';
+import learningMaterialsIcon from './icon--learning-materials.svg';
 
 import scratchLogo from './scratch-logo.svg';
 import scratchLogoAndroid from './scratch-logo-android.svg';
@@ -86,6 +87,11 @@ const ariaMessages = defineMessages({
         id: 'gui.menuBar.debug',
         defaultMessage: 'Debug',
         description: 'accessibility text for the debug button'
+    },
+    learningMaterials: {
+        id: 'gui.learningMaterials.menuButton',
+        defaultMessage: 'Learning materials',
+        description: 'Button that opens the assigned learning materials'
     },
     home: {
         id: 'gui.menuBar.home',
@@ -485,6 +491,19 @@ class MenuBar extends React.Component {
                                 <FormattedMessage {...ariaMessages.debug} />
                             </span>
                         </button>
+                        <button
+                            aria-label={this.props.intl.formatMessage(ariaMessages.learningMaterials)}
+                            className={classNames(styles.menuBarItem, styles.noOffset, styles.hoverable)}
+                            onClick={this.props.onOpenLearningMaterials}
+                        >
+                            <img
+                                className={styles.helpIcon}
+                                src={learningMaterialsIcon}
+                            />
+                            <span className={styles.debugLabel}>
+                                <FormattedMessage {...ariaMessages.learningMaterials} />
+                            </span>
+                        </button>
                     </div>
                 </div>
 
@@ -696,6 +715,7 @@ MenuBar.propTypes = {
     onOpenRegistration: PropTypes.func,
     onOpenTipLibrary: PropTypes.func,
     onOpenDebugModal: PropTypes.func,
+    onOpenLearningMaterials: PropTypes.func,
     onProjectTelemetryEvent: PropTypes.func,
     onRequestCloseLogin: PropTypes.func,
     onSeeCommunity: PropTypes.func,
@@ -773,6 +793,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     autoUpdateProject: () => dispatch(autoUpdateProject()),
     onOpenTipLibrary: () => dispatch(openTipsLibrary()),
     onOpenDebugModal: () => dispatch(openDebugModal()),
+    onOpenLearningMaterials: () => dispatch(openLearningMaterials()),
     onClickNew: needSave => dispatch(requestNewProject(needSave)),
     onClickLogin: ownProps.onClickLogin ?? (() => dispatch(openLoginMenu())),
     onClickSave: () => dispatch(manualUpdateProject()),

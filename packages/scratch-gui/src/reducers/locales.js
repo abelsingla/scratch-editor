@@ -2,11 +2,12 @@ import {isRtl} from 'scratch-l10n';
 import editorMessages from 'scratch-l10n/locales/editor-msgs';
 
 import {withHandSensingMessages} from '../lib/hand-sensing/messages';
+import {withLearningMaterialsMessages} from '../lib/learning-materials/messages';
 
 const UPDATE_LOCALES = 'scratch-gui/locales/UPDATE_LOCALES';
 const SELECT_LOCALE = 'scratch-gui/locales/SELECT_LOCALE';
 
-const extendedEditorMessages = withHandSensingMessages(editorMessages);
+const extendedEditorMessages = withLearningMaterialsMessages(withHandSensingMessages(editorMessages));
 
 const initialState = {
     isRtl: false,
@@ -47,7 +48,7 @@ const selectLocale = function (locale) {
 const setLocales = function (localesMessages) {
     return {
         type: UPDATE_LOCALES,
-        messagesByLocale: withHandSensingMessages(localesMessages)
+        messagesByLocale: withLearningMaterialsMessages(withHandSensingMessages(localesMessages))
     };
 };
 const initLocale = function (currentState, locale) {

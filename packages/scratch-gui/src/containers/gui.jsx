@@ -23,6 +23,7 @@ import {
 import {
     closeCostumeLibrary,
     closeBackdropLibrary,
+    closeLearningMaterials,
     closeTelemetryModal,
     openExtensionLibrary,
     closeDebugModal
@@ -30,6 +31,7 @@ import {
 
 import {setPlatform} from '../reducers/platform';
 import {setDynamicAssets} from '../reducers/dynamic-assets';
+import {setExerciseStatus, setLearningMaterials} from '../reducers/learning-materials';
 
 import FontLoaderHOC from '../lib/font-loader-hoc.jsx';
 import LocalizationHOC from '../lib/localization-hoc.jsx';
@@ -43,6 +45,8 @@ import vmManagerHOC from '../lib/vm-manager-hoc.jsx';
 import cloudManagerHOC from '../lib/cloud-manager-hoc.jsx';
 import systemPreferencesHOC from '../lib/system-preferences-hoc.jsx';
 import {PLATFORM} from '../lib/platform.js';
+import LearningMaterialsBridge from '../lib/learning-materials/learning-materials-bridge.js';
+import {learningMaterialsShape} from '../lib/learning-materials/prop-types.js';
 
 import GUIComponent from '../components/gui/gui.jsx';
 import {GUIStoragePropType} from '../gui-config';
@@ -54,6 +58,11 @@ import {
 } from '../lib/assets-prop-types.js';
 
 class GUI extends React.Component {
+    constructor (props) {
+        super(props);
+        this.handleLearningExerciseStatusChange = this.handleLearningExerciseStatusChange.bind(this);
+        this.initializeLearningMaterialsBridge = this.initializeLearningMaterialsBridge.bind(this);
+    }
     componentDidMount () {
         this.props.onStorageInit(this.props.storage.scratchStorage);
         this.props.onVmInit(this.props.vm);
@@ -65,6 +74,8 @@ class GUI extends React.Component {
             this.props.onUpdateDynamicAssets(this.props.dynamicAssets);
         }
         this.maybePrewarmPaperSandbox();
+        this.initializeLearningMaterialsBridge();
+        if (this.props.learningMaterials) this.props.onSetLearningMaterials(this.props.learningMaterials);
     }
     componentDidUpdate (prevProps) {
         if (this.props.dynamicAssets !== prevProps.dynamicAssets) {
@@ -88,6 +99,31 @@ class GUI extends React.Component {
         if (this.props.shouldStopProject && !prevProps.shouldStopProject) {
             this.props.vm.stopAll();
         }
+        if (this.props.learningMaterials !== prevProps.learningMaterials && this.props.learningMaterials) {
+            this.props.onSetLearningMaterials(this.props.learningMaterials);
+        }
+        if (this.props.learningMaterialsOrigin !== prevProps.learningMaterialsOrigin) {
+            if (this.learningMaterialsBridge) this.learningMaterialsBridge.dispose();
+            this.initializeLearningMaterialsBridge();
+        }
+    }
+    componentWillUnmount () {
+        if (this.learningMaterialsBridge) this.learningMaterialsBridge.dispose();
+    }
+    initializeLearningMaterialsBridge () {
+        this.learningMaterialsBridge = new LearningMaterialsBridge({
+            allowedOrigin: this.props.learningMaterialsOrigin,
+            onMaterials: this.props.onSetLearningMaterials
+        });
+        this.learningMaterialsBridge.start();
+    }
+    handleLearningExerciseStatusChange (exerciseId, status) {
+        this.props.onSetExerciseStatus(exerciseId, status);
+        this.learningMaterialsBridge.publishExerciseStatus({
+            activityId: this.props.learningMaterialsManifest.activityId,
+            exerciseId,
+            status
+        });
     }
     // Once per editor session, build and warm the Paper.js sandbox during idle
     // time so the first costume import in the paint editor is not slowed by the
@@ -126,6 +162,10 @@ class GUI extends React.Component {
             fetchingProject,
             isLoading,
             loadingStateVisible,
+            learningMaterials: _learningMaterials,
+            learningMaterialsOrigin: _learningMaterialsOrigin,
+            onSetExerciseStatus: _onSetExerciseStatus,
+            onSetLearningMaterials: _onSetLearningMaterials,
             ...componentProps
         } = this.props;
 
@@ -134,6 +174,7 @@ class GUI extends React.Component {
             <GUIComponent
                 loading={fetchingProject || isLoading || loadingStateVisible}
                 {...componentProps}
+                onLearningExerciseStatusChange={this.handleLearningExerciseStatusChange}
             >
                 {children}
             </GUIComponent>
@@ -162,6 +203,9 @@ GUI.propTypes = {
     isShowingProject: PropTypes.bool,
     isTotallyNormal: PropTypes.bool,
     loadingStateVisible: PropTypes.bool,
+    learningMaterials: learningMaterialsShape,
+    learningMaterialsManifest: learningMaterialsShape.isRequired,
+    learningMaterialsOrigin: PropTypes.string,
     manuallySaveThumbnails: PropTypes.bool,
     onSetManualThumbnail: PropTypes.func,
     onSetManualThumbnailButtonClick: PropTypes.func,
@@ -171,6 +215,8 @@ GUI.propTypes = {
     onUpdateProjectId: PropTypes.func,
     onUpdateDynamicAssets: PropTypes.func,
     onVmInit: PropTypes.func,
+    onSetExerciseStatus: PropTypes.func.isRequired,
+    onSetLearningMaterials: PropTypes.func.isRequired,
     platform: PropTypes.oneOf(Object.keys(PLATFORM)),
     setPlatform: PropTypes.func.isRequired,
     /**
@@ -218,6 +264,9 @@ const mapStateToProps = (state, ownProps) => {
         isRtl: state.locales.isRtl,
         isShowingProject: getIsShowingProject(loadingState),
         loadingStateVisible: state.scratchGui.modals.loadingProject,
+        learningMaterialsManifest: state.scratchGui.learningMaterials.manifest,
+        learningMaterialsStatus: state.scratchGui.learningMaterials.statusByExercise,
+        learningMaterialsVisible: state.scratchGui.modals.learningMaterials,
         platform: ownProps.platform,
         projectId: state.scratchGui.projectState.projectId,
         soundsTabVisible: state.scratchGui.editorTab.activeTabIndex === SOUNDS_TAB_INDEX,
@@ -240,8 +289,11 @@ const mapDispatchToProps = dispatch => ({
     setPlatform: platform => dispatch(setPlatform(platform)),
     onRequestCloseBackdropLibrary: () => dispatch(closeBackdropLibrary()),
     onRequestCloseCostumeLibrary: () => dispatch(closeCostumeLibrary()),
+    onRequestCloseLearningMaterials: () => dispatch(closeLearningMaterials()),
     onRequestCloseDebugModal: () => dispatch(closeDebugModal()),
-    onRequestCloseTelemetryModal: () => dispatch(closeTelemetryModal())
+    onRequestCloseTelemetryModal: () => dispatch(closeTelemetryModal()),
+    onSetExerciseStatus: (exerciseId, status) => dispatch(setExerciseStatus(exerciseId, status)),
+    onSetLearningMaterials: manifest => dispatch(setLearningMaterials(manifest))
 });
 
 const ConnectedGUI = injectIntl(connect(

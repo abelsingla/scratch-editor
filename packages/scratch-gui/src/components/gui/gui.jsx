@@ -31,6 +31,7 @@ import Alerts from '../../containers/alerts.jsx';
 import DragLayer from '../../containers/drag-layer.jsx';
 import ConnectionModal from '../../containers/connection-modal.jsx';
 import TelemetryModal from '../telemetry-modal/telemetry-modal.jsx';
+import LearningMaterialsModal from '../learning-materials/learning-materials-modal.jsx';
 
 import layout, {STAGE_SIZE_MODES} from '../../lib/layout-constants';
 import {resolveStageSize} from '../../lib/screen-utils';
@@ -48,6 +49,7 @@ import {setTheme} from '../../reducers/settings.js';
 import {PLATFORM} from '../../lib/platform.js';
 import {MenuRefProvider} from '../../contexts/menu-ref-context.jsx';
 import {ModalFocusProvider} from '../../contexts/modal-focus-context.jsx';
+import {learningMaterialsShape} from '../../lib/learning-materials/prop-types.js';
 
 const ariaMessages = defineMessages({
     menuBar: {
@@ -157,6 +159,9 @@ const GUIComponent = props => {
         isShared,
         isTelemetryEnabled,
         isTotallyNormal,
+        learningMaterialsManifest,
+        learningMaterialsStatus,
+        learningMaterialsVisible,
         loading,
         logo,
         manuallySaveThumbnails,
@@ -181,7 +186,9 @@ const GUIComponent = props => {
         onRequestCloseBackdropLibrary,
         onRequestCloseCostumeLibrary,
         onRequestCloseDebugModal,
+        onRequestCloseLearningMaterials,
         onRequestCloseTelemetryModal,
+        onLearningExerciseStatusChange,
         onSeeCommunity,
         onShare,
         onShowPrivacyPolicy,
@@ -287,6 +294,13 @@ const GUIComponent = props => {
                             onShowPrivacyPolicy={onShowPrivacyPolicy}
                         />
                     ) : null}
+                    <LearningMaterialsModal
+                        isOpen={learningMaterialsVisible}
+                        manifest={learningMaterialsManifest}
+                        statusByExercise={learningMaterialsStatus}
+                        onClose={onRequestCloseLearningMaterials}
+                        onStatusChange={onLearningExerciseStatusChange}
+                    />
                     {loading ? (
                         <Loader />
                     ) : null}
@@ -619,6 +633,9 @@ GUIComponent.propTypes = {
     isRtl: PropTypes.bool,
     isShared: PropTypes.bool,
     isTotallyNormal: PropTypes.bool,
+    learningMaterialsManifest: learningMaterialsShape.isRequired,
+    learningMaterialsStatus: PropTypes.objectOf(PropTypes.string).isRequired,
+    learningMaterialsVisible: PropTypes.bool,
     loading: PropTypes.bool,
     logo: PropTypes.string,
     manuallySaveThumbnails: PropTypes.bool,
@@ -638,7 +655,9 @@ GUIComponent.propTypes = {
     onRequestCloseBackdropLibrary: PropTypes.func,
     onRequestCloseCostumeLibrary: PropTypes.func,
     onRequestCloseDebugModal: PropTypes.func,
+    onRequestCloseLearningMaterials: PropTypes.func.isRequired,
     onRequestCloseTelemetryModal: PropTypes.func,
+    onLearningExerciseStatusChange: PropTypes.func.isRequired,
     onSeeCommunity: PropTypes.func,
     onShare: PropTypes.func,
     onShowPrivacyPolicy: PropTypes.func,

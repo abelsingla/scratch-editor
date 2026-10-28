@@ -6,6 +6,7 @@ const MODAL_COSTUME_LIBRARY = 'costumeLibrary';
 const MODAL_DEBUG = 'debugModal';
 const MODAL_EXTENSION_LIBRARY = 'extensionLibrary';
 const MODAL_LOADING_PROJECT = 'loadingProject';
+const MODAL_LEARNING_MATERIALS = 'learningMaterials';
 const MODAL_TELEMETRY = 'telemetryModal';
 const MODAL_SOUND_LIBRARY = 'soundLibrary';
 const MODAL_SPRITE_LIBRARY = 'spriteLibrary';
@@ -19,6 +20,7 @@ const initialState = {
     [MODAL_DEBUG]: false,
     [MODAL_EXTENSION_LIBRARY]: false,
     [MODAL_LOADING_PROJECT]: false,
+    [MODAL_LEARNING_MATERIALS]: false,
     [MODAL_TELEMETRY]: false,
     [MODAL_SOUND_LIBRARY]: false,
     [MODAL_SPRITE_LIBRARY]: false,
@@ -69,6 +71,9 @@ const openExtensionLibrary = function () {
 const openLoadingProject = function () {
     return openModal(MODAL_LOADING_PROJECT);
 };
+const openLearningMaterials = function () {
+    return openModal(MODAL_LEARNING_MATERIALS);
+};
 const openTelemetryModal = function () {
     return openModal(MODAL_TELEMETRY);
 };
@@ -102,6 +107,9 @@ const closeExtensionLibrary = function () {
 const closeLoadingProject = function () {
     return closeModal(MODAL_LOADING_PROJECT);
 };
+const closeLearningMaterials = function () {
+    return closeModal(MODAL_LEARNING_MATERIALS);
+};
 const closeTelemetryModal = function () {
     return closeModal(MODAL_TELEMETRY);
 };
@@ -128,6 +136,7 @@ export {
     openDebugModal,
     openExtensionLibrary,
     openLoadingProject,
+    openLearningMaterials,
     openSoundLibrary,
     openSpriteLibrary,
     openSoundRecorder,
@@ -139,6 +148,7 @@ export {
     closeDebugModal,
     closeExtensionLibrary,
     closeLoadingProject,
+    closeLearningMaterials,
     closeSpriteLibrary,
     closeSoundLibrary,
     closeSoundRecorder,
