@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 372" role="img" aria-labelledby="title">
+  <title id="title">Hand sensing</title>
+  <rect width="600" height="372" rx="28" fill="#f3f0ff"/>
+  <circle cx="300" cy="186" r="128" fill="#855cd6" opacity="0.12"/>
+  <g fill="none" stroke="#855cd6" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke-width="20" d="M249 207v-91c0-18 27-18 27 0v67-94c0-19 28-19 28 0v94-77c0-19 28-19 28 0v77-51c0-19 28-19 28 0v93c0 66-39 103-96 103-50 0-77-32-94-73l-18-43c-9-24 26-38 39-16l35 54v-43c0-19 23-27 36-14"/>
+    <path stroke-width="8" d="M130 82h-31v31M470 82h31v31M130 290h-31v-31M470 290h31v-31" opacity="0.6"/>
+  </g>
+  <g fill="#ffbf00">
+    <circle cx="262" cy="92" r="10"/>
+    <circle cx="290" cy="64" r="10"/>
+    <circle cx="318" cy="81" r="10"/>
+    <circle cx="346" cy="106" r="10"/>
+    <circle cx="176" cy="194" r="10"/>
+  </g>
+</svg>

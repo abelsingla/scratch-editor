@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" role="img" aria-labelledby="title">
+  <title id="title">Hand sensing</title>
+  <path fill="#855cd6" d="M12 20V9a2 2 0 0 1 4 0v8-11a2 2 0 0 1 4 0v11-9a2 2 0 0 1 4 0v9-6a2 2 0 0 1 4 0v11c0 8-5 13-12 13-6 0-9-4-11-9l-2-5a2.5 2.5 0 0 1 4.5-2l2.5 4v-3a2 2 0 0 1 2-2Z"/>
+  <g fill="#ffbf00">
+    <circle cx="14" cy="7" r="1.4"/>
+    <circle cx="18" cy="4" r="1.4"/>
+    <circle cx="22" cy="6" r="1.4"/>
+    <circle cx="26" cy="9" r="1.4"/>
+    <circle cx="6" cy="18" r="1.4"/>
+  </g>
+</svg>

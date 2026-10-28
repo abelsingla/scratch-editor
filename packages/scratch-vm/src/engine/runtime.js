@@ -23,6 +23,7 @@ const fetchWithTimeout = require('../util/fetch-with-timeout');
 // Virtual I/O devices.
 const Clock = require('../io/clock');
 const Cloud = require('../io/cloud');
+const HandSensing = require('../io/handSensing');
 const Keyboard = require('../io/keyboard');
 const Mouse = require('../io/mouse');
 const MouseWheel = require('../io/mouseWheel');
@@ -344,6 +345,7 @@ class Runtime extends EventEmitter {
         this.ioDevices = {
             clock: new Clock(this),
             cloud: new Cloud(this),
+            handSensing: new HandSensing(),
             keyboard: new Keyboard(this),
             mouse: new Mouse(this),
             mouseWheel: new MouseWheel(this),
