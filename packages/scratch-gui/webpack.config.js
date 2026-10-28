@@ -38,6 +38,10 @@ const baseConfig = new ScratchWebpackConfigBuilder(
     .merge({
         output: {
             assetModuleFilename: 'static/assets/[name].[hash][ext][query]',
+            // Workers resolve dependent chunks relative to their own script. Keeping
+            // all JavaScript chunks at the output root makes that resolution portable
+            // across the web editor, Scratch Desktop and file-based builds.
+            chunkFilename: '[name].[contenthash].js',
             library: {
                 name: 'GUI',
                 type: 'umd2'
@@ -113,6 +117,14 @@ const baseConfig = new ScratchWebpackConfigBuilder(
             {
                 from: '../../node_modules/@mediapipe/face_detection',
                 to: 'chunks/mediapipe/face_detection'
+            },
+            {
+                from: '../../node_modules/@tensorflow/tfjs-backend-wasm/dist/*.wasm',
+                to: 'static/hand-sensing/wasm/[name].[ext]'
+            },
+            {
+                from: 'src/lib/hand-sensing/models',
+                to: 'static/hand-sensing/models'
             }
         ]
     }));

@@ -124,6 +124,7 @@
   },
   "dependencies": {
     "@mediapipe/face_detection": "0.4.1646425229",
+    "@mediapipe/hands": "0.4.1675469240",
     "@microbit/microbit-universal-hex": "0.2.2",
     "@radix-ui/react-context-menu": "2.3.4",
     "@scratch/scratch-paint": "15.3.0",
@@ -132,7 +133,9 @@
     "@scratch/scratch-svg-renderer": "15.3.0",
     "@scratch/scratch-vm": "15.3.0",
     "@tensorflow-models/face-detection": "1.0.3",
+    "@tensorflow-models/hand-pose-detection": "2.0.1",
     "@tensorflow/tfjs": "4.22.0",
+    "@tensorflow/tfjs-backend-wasm": "4.22.0",
     "balance-text": "3.3.1",
     "bowser": "1.9.4",
     "classnames": "2.5.1",

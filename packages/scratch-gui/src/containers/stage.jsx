@@ -6,6 +6,7 @@ import VM from '@scratch/scratch-vm';
 import {connect} from 'react-redux';
 
 import {STAGE_DISPLAY_SIZES} from '../lib/layout-constants';
+import HandSensingProvider from '../lib/hand-sensing/hand-sensing-provider.js';
 import {getEventXY} from '../lib/touch-utils';
 import VideoProvider from '../lib/video/video-provider';
 import {BitmapAdapter as V2BitmapAdapter} from '@scratch/scratch-svg-renderer';
@@ -69,6 +70,7 @@ class Stage extends React.Component {
             this.props.vm.renderer.draw();
         }
         this.props.vm.attachV2BitmapAdapter(new V2BitmapAdapter());
+        this.handSensingProvider = new HandSensingProvider(this.props.vm);
     }
     componentDidMount () {
         this.attachRectEvents();
@@ -95,6 +97,7 @@ class Stage extends React.Component {
         this.renderer.resize(this.rect.width, this.rect.height);
     }
     componentWillUnmount () {
+        this.handSensingProvider.dispose();
         this.detachMouseEvents(this.canvas);
         this.detachRectEvents();
         this.stopColorPickingLoop();
