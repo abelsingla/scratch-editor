@@ -90,6 +90,9 @@ The optional integration properties are:
 The default store is browser-local. A later learning-service adapter can
 implement the same interface with authenticated remote storage.
 
+When `learningAttemptId` is configured for teacher submissions, autosave uses it
+as the draft scope unless a distinct `learningDraftId` is explicitly provided.
+
 ## Draft events
 
 The editor publishes these local events and forwards them to an explicitly
@@ -111,3 +114,63 @@ be removed by browser storage policies or by clearing site data. Remote draft
 history, optimistic concurrency, attempt authorization, immutable submissions,
 and teacher review remain learning-service milestones. A host must not treat a
 draft event as an auditable submission or grade.
+
+## Teacher submissions
+
+The editor supports explicit, per-exercise submission through a host-provided
+adapter. Submission controls appear after an exercise is marked complete and
+only when all required integration properties are configured:
+
+- `learningAttemptId`: an opaque, server-authorized attempt identifier. If it is
+  omitted, `learningDraftId` is used for compatibility.
+- `learningSubmissionClient`: an object with an asynchronous `submit` method.
+- `learningSubmissionEnabled`: optional feature switch; defaults to `true`.
+- `onLearningSubmissionEvent`: optional callback for receipt or error metadata.
+
+The adapter receives `{artifact, metadata}`. `artifact` is the complete SB3
+`Blob`. `metadata` includes the activity revision, exercise ID, attempt ID,
+project reference, exercise status snapshot, artifact size, SHA-256 digest, and
+an idempotent client submission ID. The adapter must upload the artifact through
+an authenticated learning-service session and resolve with:
+
+```js
+{
+    submissionId: 'opaque-server-submission-id',
+    submittedAt: '2026-10-28T12:00:00.000Z',
+    attemptNumber: 1
+}
+```
+
+A same-origin learning-platform adapter can use a multipart request:
+
+```js
+const learningSubmissionClient = {
+    async submit ({artifact, metadata}) {
+        const body = new FormData();
+        body.append('metadata', new Blob([JSON.stringify(metadata)], {type: 'application/json'}));
+        body.append('artifact', artifact, metadata.artifact.fileName);
+        const response = await fetch(`/v1/attempts/${metadata.attemptId}/submissions`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {'Idempotency-Key': metadata.clientSubmissionId},
+            body
+        });
+        if (!response.ok) throw new Error(`Submission failed with status ${response.status}.`);
+        return response.json();
+    }
+};
+```
+
+The server receipt is shown in the exercise card and the learner can submit a
+new immutable version later. Failed retries of the same artifact reuse the
+client submission ID.
+
+The editor emits these metadata-only events:
+
+- `ft-learning/submission-created.v1`
+- `ft-learning/submission-error.v1`
+
+SB3 content is passed only to the explicit submission adapter. It is never
+included in a DOM event or parent-window message. The server must derive learner
+identity and course authorization from the authenticated attempt rather than
+trust browser-supplied identity fields.

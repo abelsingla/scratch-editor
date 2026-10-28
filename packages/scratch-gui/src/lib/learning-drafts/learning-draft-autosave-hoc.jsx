@@ -95,7 +95,7 @@ const LearningDraftAutosaveHOC = WrappedComponent => {
             return createLearningDraftId({
                 activityId: props.learningMaterialsManifest.activityId,
                 activityRevision: props.learningMaterialsManifest.revision,
-                draftId: props.learningDraftId,
+                draftId: props.learningDraftId || props.learningAttemptId,
                 projectId: props.projectId
             });
         }
@@ -250,6 +250,7 @@ const LearningDraftAutosaveHOC = WrappedComponent => {
             const {
                 isPlayerOnly: _isPlayerOnly,
                 isShowingProject: _isShowingProject,
+                learningAttemptId: _learningAttemptId,
                 learningAutosaveEnabled: _learningAutosaveEnabled,
                 learningAutosaveIntervalMs: _learningAutosaveIntervalMs,
                 learningDraftId: _learningDraftId,
@@ -270,6 +271,7 @@ const LearningDraftAutosaveHOC = WrappedComponent => {
     LearningDraftAutosave.propTypes = {
         isPlayerOnly: PropTypes.bool,
         isShowingProject: PropTypes.bool,
+        learningAttemptId: PropTypes.string,
         learningAutosaveEnabled: PropTypes.bool.isRequired,
         learningAutosaveIntervalMs: PropTypes.number.isRequired,
         learningDraftId: PropTypes.string,

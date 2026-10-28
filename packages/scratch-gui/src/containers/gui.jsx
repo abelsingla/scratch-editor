@@ -48,6 +48,7 @@ import {PLATFORM} from '../lib/platform.js';
 import LearningMaterialsBridge from '../lib/learning-materials/learning-materials-bridge.js';
 import {learningMaterialsShape} from '../lib/learning-materials/prop-types.js';
 import LearningDraftAutosaveHOC from '../lib/learning-drafts/learning-draft-autosave-hoc.jsx';
+import LearningSubmissionHOC from '../lib/learning-submissions/learning-submission-hoc.jsx';
 
 import GUIComponent from '../components/gui/gui.jsx';
 import {GUIStoragePropType} from '../gui-config';
@@ -313,6 +314,7 @@ const WrappedGui = compose(
     ProjectFetcherHOC,
     TitledHOC,
     ProjectSaverHOC,
+    LearningSubmissionHOC,
     LearningDraftAutosaveHOC,
     vmListenerHOC,
     vmManagerHOC,

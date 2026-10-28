@@ -83,6 +83,31 @@ const messages = defineMessages({
         id: 'gui.learningMaterials.reopen',
         defaultMessage: 'Reopen exercise',
         description: 'Button that reopens a completed exercise'
+    },
+    submit: {
+        id: 'gui.learningMaterials.submit',
+        defaultMessage: 'Submit to teacher',
+        description: 'Button that submits an exercise program to the teacher'
+    },
+    submitting: {
+        id: 'gui.learningMaterials.submitting',
+        defaultMessage: 'Submitting…',
+        description: 'Button label while an exercise program is being submitted'
+    },
+    submitted: {
+        id: 'gui.learningMaterials.submitted',
+        defaultMessage: 'Submitted to teacher',
+        description: 'Status shown after an exercise program was submitted'
+    },
+    resubmit: {
+        id: 'gui.learningMaterials.resubmit',
+        defaultMessage: 'Submit updated program',
+        description: 'Button that submits a newer exercise program version'
+    },
+    submissionError: {
+        id: 'gui.learningMaterials.submissionError',
+        defaultMessage: 'Submission failed. Try again.',
+        description: 'Status shown when an exercise program submission failed'
     }
 });
 
@@ -111,11 +136,25 @@ const statusLabelStyles = {
     locked: styles.statusLabelLocked
 };
 
-const LearningMaterialsModal = ({isOpen, manifest, statusByExercise, onClose, onStatusChange}) => {
+const noop = () => {};
+
+const LearningMaterialsModal = ({
+    isOpen,
+    manifest,
+    statusByExercise,
+    submissionAvailable = false,
+    submissionsByExercise = {},
+    onClose,
+    onStatusChange,
+    onSubmit = noop
+}) => {
     const intl = useIntl();
     const handleStatusClick = useCallback(event => {
         onStatusChange(event.currentTarget.dataset.exerciseId, event.currentTarget.dataset.nextStatus);
     }, [onStatusChange]);
+    const handleSubmitClick = useCallback(event => {
+        onSubmit(event.currentTarget.dataset.exerciseId);
+    }, [onSubmit]);
     if (!isOpen) return null;
 
     const completedCount = manifest.exercises.filter(exercise =>
@@ -183,6 +222,12 @@ const LearningMaterialsModal = ({isOpen, manifest, statusByExercise, onClose, on
                 {manifest.exercises.map((exercise, index) => {
                     const status = statusByExercise[exercise.id] || 'available';
                     const nextStatus = nextStatusFor(status);
+                    const submission = submissionsByExercise[exercise.id];
+                    const isSubmitting = submission?.status === 'submitting';
+                    const wasSubmitted = submission?.status === 'submitted';
+                    const submissionFailed = submission?.status === 'error';
+                    const submissionButtonMessage = isSubmitting ? messages.submitting :
+                        wasSubmitted ? messages.resubmit : messages.submit;
                     return (
                         <article
                             className={classNames(styles.card, statusCardStyles[status])}
@@ -212,19 +257,50 @@ const LearningMaterialsModal = ({isOpen, manifest, statusByExercise, onClose, on
                                     <li key={`${exercise.id}-${instructionIndex}`}>{instruction}</li>
                                 ))}
                             </ol>
-                            {nextStatus ? (
-                                <button
-                                    className={classNames(styles.actionButton, {
-                                        [styles.completeButton]: nextStatus === 'completed'
-                                    })}
-                                    data-exercise-id={exercise.id}
-                                    data-next-status={nextStatus}
-                                    type="button"
-                                    onClick={handleStatusClick}
-                                >
-                                    <FormattedMessage {...actionMessageFor(status)} />
-                                </button>
-                            ) : null}
+                            <div className={styles.actions}>
+                                {nextStatus ? (
+                                    <button
+                                        className={classNames(styles.actionButton, {
+                                            [styles.completeButton]: nextStatus === 'completed'
+                                        })}
+                                        data-exercise-id={exercise.id}
+                                        data-next-status={nextStatus}
+                                        type="button"
+                                        onClick={handleStatusClick}
+                                    >
+                                        <FormattedMessage {...actionMessageFor(status)} />
+                                    </button>
+                                ) : null}
+                                {submissionAvailable && status === 'completed' ? (
+                                    <div className={styles.submissionAction}>
+                                        {wasSubmitted ? (
+                                            <div
+                                                className={styles.submissionSuccess}
+                                                role="status"
+                                            >
+                                                <FormattedMessage {...messages.submitted} />
+                                            </div>
+                                        ) : null}
+                                        {submissionFailed ? (
+                                            <div
+                                                className={styles.submissionError}
+                                                role="alert"
+                                            >
+                                                <FormattedMessage {...messages.submissionError} />
+                                            </div>
+                                        ) : null}
+                                        <button
+                                            className={classNames(styles.actionButton, styles.submitButton)}
+                                            data-exercise-id={exercise.id}
+                                            disabled={isSubmitting}
+                                            type="button"
+                                            onClick={handleSubmitClick}
+                                        >
+                                            <FormattedMessage {...submissionButtonMessage} />
+                                        </button>
+                                    </div>
+                                ) : null}
+                            </div>
                         </article>
                     );
                 })}
@@ -238,7 +314,10 @@ LearningMaterialsModal.propTypes = {
     manifest: learningMaterialsShape.isRequired,
     onClose: PropTypes.func.isRequired,
     onStatusChange: PropTypes.func.isRequired,
-    statusByExercise: PropTypes.objectOf(PropTypes.string).isRequired
+    onSubmit: PropTypes.func,
+    statusByExercise: PropTypes.objectOf(PropTypes.string).isRequired,
+    submissionAvailable: PropTypes.bool,
+    submissionsByExercise: PropTypes.objectOf(PropTypes.object)
 };
 
 export default LearningMaterialsModal;

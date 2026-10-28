@@ -162,6 +162,8 @@ const GUIComponent = props => {
         learningMaterialsManifest,
         learningMaterialsStatus,
         learningMaterialsVisible,
+        learningSubmissionAvailable,
+        learningSubmissionsByExercise,
         loading,
         logo,
         manuallySaveThumbnails,
@@ -188,6 +190,7 @@ const GUIComponent = props => {
         onRequestCloseDebugModal,
         onRequestCloseLearningMaterials,
         onRequestCloseTelemetryModal,
+        onLearningExerciseSubmit,
         onLearningExerciseStatusChange,
         onSeeCommunity,
         onShare,
@@ -298,7 +301,10 @@ const GUIComponent = props => {
                         isOpen={learningMaterialsVisible}
                         manifest={learningMaterialsManifest}
                         statusByExercise={learningMaterialsStatus}
+                        submissionAvailable={learningSubmissionAvailable}
+                        submissionsByExercise={learningSubmissionsByExercise}
                         onClose={onRequestCloseLearningMaterials}
+                        onSubmit={onLearningExerciseSubmit}
                         onStatusChange={onLearningExerciseStatusChange}
                     />
                     {loading ? (
@@ -636,6 +642,8 @@ GUIComponent.propTypes = {
     learningMaterialsManifest: learningMaterialsShape.isRequired,
     learningMaterialsStatus: PropTypes.objectOf(PropTypes.string).isRequired,
     learningMaterialsVisible: PropTypes.bool,
+    learningSubmissionAvailable: PropTypes.bool,
+    learningSubmissionsByExercise: PropTypes.objectOf(PropTypes.object),
     loading: PropTypes.bool,
     logo: PropTypes.string,
     manuallySaveThumbnails: PropTypes.bool,
@@ -657,6 +665,7 @@ GUIComponent.propTypes = {
     onRequestCloseDebugModal: PropTypes.func,
     onRequestCloseLearningMaterials: PropTypes.func.isRequired,
     onRequestCloseTelemetryModal: PropTypes.func,
+    onLearningExerciseSubmit: PropTypes.func,
     onLearningExerciseStatusChange: PropTypes.func.isRequired,
     onSeeCommunity: PropTypes.func,
     onShare: PropTypes.func,

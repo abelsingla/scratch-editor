@@ -10,5 +10,6 @@ describe('fischertechnik German messages', () => {
     test('translates learning materials and draft autosave', () => {
         expect(germanLearningMessages['gui.learningMaterials.menuButton']).toBe('Lernmaterial');
         expect(germanLearningMessages['gui.learningDraft.saved']).toBe('Entwurf gespeichert');
+        expect(germanLearningMessages['gui.learningMaterials.submit']).toBe('An die Lehrkraft senden');
     });
 });

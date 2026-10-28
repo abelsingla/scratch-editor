@@ -11,6 +11,7 @@ import editorTabReducer, {editorTabInitialState} from './editor-tab';
 import hoveredTargetReducer, {hoveredTargetInitialState} from './hovered-target';
 import learningDraftReducer, {learningDraftInitialState} from './learning-draft';
 import learningMaterialsReducer, {learningMaterialsInitialState} from './learning-materials';
+import learningSubmissionsReducer, {learningSubmissionsInitialState} from './learning-submissions';
 import menuReducer, {menuInitialState} from './menus';
 import micIndicatorReducer, {micIndicatorInitialState} from './mic-indicator';
 import modalReducer, {modalsInitialState} from './modals';
@@ -63,6 +64,7 @@ const buildInitialState = (config: GUIConfig) => ({
     hoveredTarget: hoveredTargetInitialState,
     learningDraft: learningDraftInitialState,
     learningMaterials: learningMaterialsInitialState,
+    learningSubmissions: learningSubmissionsInitialState,
     stageSize: stageSizeInitialState,
     menus: menuInitialState,
     micIndicator: micIndicatorInitialState,
@@ -175,6 +177,7 @@ const guiReducer = combineReducers({
     hoveredTarget: hoveredTargetReducer,
     learningDraft: learningDraftReducer,
     learningMaterials: learningMaterialsReducer,
+    learningSubmissions: learningSubmissionsReducer,
     stageSize: stageSizeReducer,
     menus: menuReducer,
     micIndicator: micIndicatorReducer,

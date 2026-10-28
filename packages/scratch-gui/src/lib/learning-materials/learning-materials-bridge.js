@@ -7,6 +7,8 @@ const STATUS_MESSAGE_TYPE = 'ft-learning/exercise-status.v1';
 const DRAFT_SAVED_MESSAGE_TYPE = 'ft-learning/draft-saved.v1';
 const DRAFT_RESTORED_MESSAGE_TYPE = 'ft-learning/draft-restored.v1';
 const DRAFT_ERROR_MESSAGE_TYPE = 'ft-learning/draft-error.v1';
+const SUBMISSION_CREATED_MESSAGE_TYPE = 'ft-learning/submission-created.v1';
+const SUBMISSION_ERROR_MESSAGE_TYPE = 'ft-learning/submission-error.v1';
 
 const resolveLearningPlatformOrigin = allowedOrigin =>
     new URL(allowedOrigin || window.location.origin, window.location.href).origin;
@@ -68,6 +70,8 @@ export {
     publishLearningPlatformEvent,
     READY_MESSAGE_TYPE,
     resolveLearningPlatformOrigin,
+    SUBMISSION_CREATED_MESSAGE_TYPE,
+    SUBMISSION_ERROR_MESSAGE_TYPE,
     STATUS_MESSAGE_TYPE
 };
 

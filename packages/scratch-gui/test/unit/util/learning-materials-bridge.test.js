@@ -3,6 +3,7 @@ import LearningMaterialsBridge, {
     DRAFT_SAVED_MESSAGE_TYPE,
     MATERIALS_MESSAGE_TYPE,
     publishLearningPlatformEvent,
+    SUBMISSION_CREATED_MESSAGE_TYPE,
     STATUS_MESSAGE_TYPE
 } from '../../../src/lib/learning-materials/learning-materials-bridge.js';
 
@@ -81,5 +82,22 @@ describe('LearningMaterialsBridge', () => {
         expect(listener).toHaveBeenCalledWith(expect.objectContaining({detail: metadata}));
         expect(listener.mock.calls[0][0].detail).not.toHaveProperty('projectBlob');
         window.removeEventListener(DRAFT_SAVED_MESSAGE_TYPE, listener);
+    });
+
+    test('publishes submission receipts without project content', () => {
+        const listener = jest.fn();
+        window.addEventListener(SUBMISSION_CREATED_MESSAGE_TYPE, listener);
+        const receipt = {
+            schemaVersion: 1,
+            submissionId: 'submission-1',
+            exerciseId: 'exercise-1',
+            submittedAt: '2026-10-28T12:00:00.000Z'
+        };
+
+        publishLearningPlatformEvent(SUBMISSION_CREATED_MESSAGE_TYPE, receipt, window.location.origin);
+
+        expect(listener).toHaveBeenCalledWith(expect.objectContaining({detail: receipt}));
+        expect(listener.mock.calls[0][0].detail).not.toHaveProperty('projectBlob');
+        window.removeEventListener(SUBMISSION_CREATED_MESSAGE_TYPE, listener);
     });
 });
