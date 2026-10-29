@@ -1,5 +1,8 @@
 # Learning materials window
 
+The recommended LMS boundary and rollout are documented in
+[Moodle integration architecture](./moodle-integration.md).
+
 ## Purpose
 
 The editor displays teacher-provided activities as exercise cards without

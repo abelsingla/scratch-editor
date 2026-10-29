@@ -71,8 +71,8 @@ export default appTarget => {
     } else {
         gui.render({
             canEditTitle: true,
-            backpackVisible: true,
-            showComingSoon: true,
+            backpackVisible: false,
+            showComingSoon: false,
             backpackHost,
             canSave: false,
             onClickLogo
