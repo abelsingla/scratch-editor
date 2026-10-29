@@ -114,6 +114,10 @@ class HandSensingProvider {
         const {data} = event;
         if (data.type === 'ready') {
             this._ready = true;
+            if (this._loading) {
+                this._loading = false;
+                this.vm.runtime.emit('EXTENSION_DATA_LOADING', false);
+            }
             this._scheduleCapture();
             return;
         }
@@ -121,10 +125,6 @@ class HandSensingProvider {
             this._busy = false;
             clearTimeout(this._startupTimeout);
             this.vm.postIOData('handSensing', {hands: data.hands, timestamp: data.timestamp});
-            if (this._loading) {
-                this._loading = false;
-                this.vm.runtime.emit('EXTENSION_DATA_LOADING', false);
-            }
             this._scheduleCapture();
             return;
         }

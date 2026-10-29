@@ -59,6 +59,19 @@ describe('HandSensingProvider', () => {
         provider.dispose();
     });
 
+    test('finishes loading when the worker is ready without waiting for a camera frame', () => {
+        const vm = createVm();
+        const loadingStates = [];
+        vm.runtime.on('EXTENSION_DATA_LOADING', loadingStates.push.bind(loadingStates));
+        const provider = new HandSensingProvider(vm);
+
+        vm.emit('EXTENSION_ADDED', {id: 'handSensing'});
+        worker.onmessage({data: {type: 'ready'}});
+
+        expect(loadingStates).toEqual([true, false]);
+        provider.dispose();
+    });
+
     test('publishes derived worker results and releases camera resources', () => {
         const vm = createVm();
         vm.extensionManager.isExtensionLoaded.mockReturnValue(true);
